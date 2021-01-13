@@ -1,0 +1,28 @@
+* Notes
+
+$ vagrant box add ubuntu/focal64
+file:Vagrantfile
+$ vagrant up
+$ vagrant ssh
+
+: vagrant@ubuntu-focal:~$ cd /vagrant
+: vagrant@ubuntu-focal:/vagrant$ ./server.py
+
+$ vagrant reload
+$ vagrant reload --provision
+$ vagrant destroy
+
+mac - 192.168.0.9 (home)
+vagrant - 10.0.2.15
+
+127.0.0.1 - localhost
+0.0.0.0 - INADDR_ANY - all local IPv4 addresses
+https://en.wikipedia.org/wiki/0.0.0.0
+
+
+|     guest |      host |      NAT |
+| 10.0.2.15 |   0.0.0.0 | 10.0.2.2 |
+| 10.0.2.15 | 127.0.0.1 | 10.0.2.2 |
+|   0.0.0.0 | 127.0.0.1 | 10.0.2.2 |
+|   0.0.0.0 |   0.0.0.0 | 10.0.0.2 |
+|           |           |          |
