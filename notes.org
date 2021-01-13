@@ -1,16 +1,16 @@
 * Notes
 
-$ vagrant box add ubuntu/focal64
+: $ vagrant box add ubuntu/focal64
 file:Vagrantfile
-$ vagrant up
-$ vagrant ssh
+: $ vagrant up
+: $ vagrant ssh
 
 : vagrant@ubuntu-focal:~$ cd /vagrant
 : vagrant@ubuntu-focal:/vagrant$ ./server.py
 
-$ vagrant reload
-$ vagrant reload --provision
-$ vagrant destroy
+: $ vagrant reload
+: $ vagrant reload --provision
+: $ vagrant destroy
 
 mac - 192.168.0.9 (home)
 vagrant - 10.0.2.15
