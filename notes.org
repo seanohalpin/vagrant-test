@@ -26,3 +26,31 @@ https://en.wikipedia.org/wiki/0.0.0.0
 |   0.0.0.0 | 127.0.0.1 | 10.0.2.2 |
 |   0.0.0.0 |   0.0.0.0 | 10.0.0.2 |
 |           |           |          |
+
+* Troubleshooting
+** Windows freeze at ssh private key
+If your Vagrant session hangs at
+
+: SSH auth method: Private key
+
+this might be because your firewall is blocking programs from
+connecting to localhost.
+
+To reset the firewall:
+- open an admin prompt
+: >netsh winsock reset
+- Reboot
+- Next time you use =vagrant up=, when Windows Defender appears, enable
+  private/home network (2nd checkbox)
+
+Another thing you can try is to change the configuration of your
+VirtualBox virtual machine to have 'Cable Connected' set for the
+network adapter. You can do this in the Vagrantfile using:
+
+#+name: Vagrantfile cable connected option
+#+begin_src ruby
+config.vm.provider "virtualbox" do |vb|
+  # ...
+  vb.customize ["modifyvm", :id, "--cableconnected1", "on"]
+end
+#+end_src
