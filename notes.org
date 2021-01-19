@@ -54,3 +54,5 @@ config.vm.provider "virtualbox" do |vb|
   vb.customize ["modifyvm", :id, "--cableconnected1", "on"]
 end
 #+end_src
+
+Source: https://stackoverflow.com/questions/38463579/vagrant-hangs-at-ssh-auth-method-private-key
