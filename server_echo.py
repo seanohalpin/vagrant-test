@@ -10,7 +10,8 @@ s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 parser = argparse.ArgumentParser(description='Run server')
 # --host
 # parser.add_argument('--host', default=socket.gethostname(), type=str,
-host_name = socket.gethostname()
+# host_name = socket.gethostname()
+host_name = '127.0.0.1'
 host_ip = socket.gethostbyname(host_name)
 print("host_name: %s" % host_name)
 print("host_ip: %s" % host_ip)

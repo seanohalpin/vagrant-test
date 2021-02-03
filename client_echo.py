@@ -7,7 +7,7 @@ s = socket.socket()
 # Parse args
 parser = argparse.ArgumentParser(description='Connect to server')
 # --host
-parser.add_argument('--host', default=socket.gethostname(), type=str,
+parser.add_argument('--host', default='127.0.0.1', type=str,
                     help='host to connect to')
 # --port
 parser.add_argument('--port', default=12345, type=int,
