@@ -1,0 +1,160 @@
+* Client Server patterns
+
+#+name: set plantuml local
+#+begin_src emacs-lisp :exports both :results pp :lexical yes
+(setq plantuml-default-exec-mode 'jar)
+(append plantuml-jar-args (list "-Djava.awt.headless=true"))
+#+end_src
+
+#+begin_src emacs-lisp :exports both :results pp :lexical yes
+plantuml-jar-args
+#+end_src
+
+#+begin_src emacs-lisp :exports both :results pp :lexical yes
+plantuml-java-args
+#+end_src
+
+#+RESULTS:
+: ("-Djava.awt.headless=true" "-jar" "--illegal-access=deny")
+
+#+begin_src emacs-lisp :exports both :results pp :lexical yes
+(setq plantuml-java-args '("-Djava.awt.headless=true" "-Dapple.awt.UIElement=true" "-jar" "--illegal-access=deny"))
+#+end_src
+
+#+RESULTS:
+: ("-Djava.awt.headless=true" "-Dapple.awt.UIElement=true" "-jar" "--illegal-access=deny")
+
+#+begin_src emacs-lisp :exports both :results pp :lexical yes
+(setq plantuml-jar-args '("-charset" "UTF-8"))
+#+end_src
+
+#+RESULTS:
+: ("-charset" "UTF-8")
+
+
+#+begin_src emacs-lisp :exports both :results pp :lexical yes
+(let ((l plantuml-jar-args))
+  (setq l (append l (list "-D" "java.awt.headless=true" "-D" "apple.awt.UIElement=true" "-D" "apple.awt.headless=true")))
+  l)
+#+end_src
+
+#+begin_src emacs-lisp :exports both :results pp :lexical yes
+(setq plantuml-mode-debug-enabled t)
+#+end_src
+
+#+RESULTS:
+: t
+
+
+#+name: simple client server
+#+begin_src plantuml :file simple-client-server.png :java "-Djava.awt.headless=true"
+participant "client"
+participant "Host" as OS
+participant "server"
+queue jobq
+participant worker
+
+activate server
+activate worker
+worker -> jobq : get
+deactivate worker
+server -> OS : new socket
+OS -> server : socket
+server -> OS : bind((host, port))
+server -> OS : listen
+deactivate server
+activate OS
+loop main server loop
+        activate client
+        client -> OS : connect
+        deactivate client
+        OS -> server : connect client
+        deactivate OS
+        activate server
+        server --> jobq : put
+        deactivate server
+        activate jobq
+end
+jobq -> worker : request
+deactivate jobq
+activate worker
+worker -> client : ack
+deactivate worker
+activate client
+client -> worker : request
+deactivate client
+activate worker
+worker -> client : response
+deactivate worker
+activate client
+
+deactivate client
+#+end_src
+
+#+RESULTS: simple client server
+[[file:simple-client-server.png]]
+
+
+Redo with client socket & host socket lifetimes
+& connection
+
+server -> OS : Socket()
+OS -> server : socket
+
+
+#+name: simple client server2
+#+begin_src plantuml :file simple-client-server2.png :java "-Djava.awt.headless=true"
+participant "client"
+participant "Host" as OS
+participant "server socket" as socket
+participant "server"
+queue jobq
+participant worker
+
+activate server
+activate worker
+worker -> jobq : get
+deactivate worker
+server -> OS : new socket
+OS -> socket : new
+activate socket
+socket -> server
+deactivate server
+socket -> OS : bind((host, port))
+socket -> OS : listen
+deactivate socket
+activate OS
+loop client loop
+loop main server loop
+        activate client
+        client -> OS : connect
+        deactivate client
+        OS -> server : connect client
+        deactivate OS
+        activate server
+        server --> jobq : put
+        deactivate server
+        activate jobq
+end
+jobq -> worker : request
+deactivate jobq
+activate worker
+worker -> client : ack
+deactivate worker
+activate client
+client -> worker : request
+deactivate client
+activate worker
+worker --> client : response
+activate client
+deactivate client
+worker -> jobq : get
+deactivate worker
+end
+#+end_src
+
+#+RESULTS: simple client server2
+[[file:simple-client-server2.png]]
+
+Note: asynch calls can arrive at any time, e.g. before, during, after
+worker waiting.
